@@ -112,20 +112,8 @@ document.addEventListener("DOMContentLoaded", () => {
             const context = seqCanvas.getContext("2d");
             const dpr = window.devicePixelRatio || 1;
             
-            function resizeCanvas() {
-                // On mobile, lock canvas to the physical screen height. 
-                // This completely prevents the image from zooming in or stretching when the address bar hides!
-                const targetHeight = window.innerWidth <= 768 ? window.screen.height : window.innerHeight;
-                seqCanvas.width = window.innerWidth * dpr;
-                seqCanvas.height = targetHeight * dpr;
-                seqCanvas.style.height = targetHeight + 'px';
-                if (images && images.length > 0) renderSeq();
-            }
-            
-            // Note: resizeCanvas() will be called after images array is defined.
-            
-            const frameCount = 300; // Total frames in new higher FPS sequence
-            const cacheBust = new Date().getTime(); // Prevent browser from loading old cached images
+            const frameCount = 300; // Total frames
+            const cacheBust = new Date().getTime(); 
             const currentFrame = index => (
                 `assets/sequence/ezgif-frame-${(index + 1).toString().padStart(3, '0')}.jpg?v=${cacheBust}`
             );
@@ -139,26 +127,36 @@ document.addEventListener("DOMContentLoaded", () => {
                 images.push(img);
             }
 
-            function renderSeq() {
-                if (images[seq.frame] && images[seq.frame].complete) {
-                    const img = images[seq.frame];
-                    const hRatio = seqCanvas.width / img.width;
-                    const vRatio = seqCanvas.height / img.height;
-                    const ratio = Math.max(hRatio, vRatio); // Complete full screen cover
-                    const centerShift_x = (seqCanvas.width - img.width * ratio) / 2; // Center horizontally
-                    const centerShift_y = (seqCanvas.height - img.height * ratio) / 2; // Center vertically
-                    
-                    context.imageSmoothingEnabled = true;
-                    context.imageSmoothingQuality = 'high';
-                    
-                    context.clearRect(0, 0, seqCanvas.width, seqCanvas.height);
-                    context.drawImage(img, 0, 0, img.width, img.height,
-                        centerShift_x, centerShift_y, img.width * ratio, img.height * ratio);
+            function setupCanvas() {
+                // Lock the pixel height directly to the max screen height on mobile to permanently prevent address bar zooming!
+                const targetHeight = window.innerWidth <= 768 ? window.screen.height : window.innerHeight;
+                seqCanvas.style.width = '100vw';
+                seqCanvas.style.height = targetHeight + 'px';
+                seqCanvas.style.objectFit = 'cover'; // CSS GPU native scaling, no jitter!
+                
+                // Lock internal resolution to drastically improve memory & performance
+                const img = images[0];
+                if (img && img.width > 0) {
+                    seqCanvas.width = img.width;
+                    seqCanvas.height = img.height;
+                } else {
+                    seqCanvas.width = window.innerWidth * dpr;
+                    seqCanvas.height = targetHeight * dpr;
                 }
             }
 
-            resizeCanvas(); // Setup initial perfectly locked dimensions
-            images[0].onload = renderSeq;
+            function renderSeq() {
+                if (images[seq.frame] && images[seq.frame].complete) {
+                    const img = images[seq.frame];
+                    context.clearRect(0, 0, seqCanvas.width, seqCanvas.height);
+                    context.drawImage(img, 0, 0, seqCanvas.width, seqCanvas.height);
+                }
+            }
+
+            images[0].onload = () => {
+                setupCanvas();
+                renderSeq();
+            };
 
             // Desktop and Mobile: Scrub on scroll
             gsap.to(seq, {
@@ -176,10 +174,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
             let lastWidth = window.innerWidth;
             window.addEventListener('resize', () => {
-                // Resize ONLY on width change (e.g. rotating phone) to prevent vertical scroll jitter
+                // Resize ONLY on width change (e.g. rotating phone)
                 if (window.innerWidth !== lastWidth) {
                     lastWidth = window.innerWidth;
-                    resizeCanvas();
+                    setupCanvas();
+                    renderSeq();
                 }
             });
         }

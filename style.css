@@ -34,7 +34,7 @@
 }
 
 html {
-    scroll-behavior: smooth;
+    /* Removed scroll-behavior: smooth as it severely conflicts with GSAP ScrollTrigger on mobile */
 }
 
 body {
