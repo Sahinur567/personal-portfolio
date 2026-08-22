@@ -164,16 +164,9 @@ document.addEventListener("DOMContentLoaded", () => {
                     onUpdate: renderSeq
                 });
             } else {
-                // Mobile: Autoplay slowly to prevent massive scroll lag and jitter
-                gsap.to(seq, {
-                    frame: frameCount - 1,
-                    snap: "frame",
-                    ease: "none",
-                    duration: 10,
-                    repeat: -1,
-                    yoyo: true,
-                    onUpdate: renderSeq
-                });
+                // Mobile: Keep it as a static background image!
+                // Redrawing a massive canvas 30x a second during scroll destroys mobile performance.
+                // It will just draw the first frame (via images[0].onload) and stay beautiful & smooth.
             }
 
             let lastWidth = window.innerWidth;
