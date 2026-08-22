@@ -87,7 +87,7 @@ document.addEventListener("DOMContentLoaded", () => {
             hamburger.classList.remove('active');
             navLinks.classList.remove('active');
         });
-
+    });
 
     // 4. GSAP Animations
     gsap.registerPlugin(ScrollTrigger);
