@@ -89,14 +89,16 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
-    // Utility: Split text into spans for staggered animations
+    // Utility: Split text into spans for staggered animations (wrapped in words to prevent breaking)
     function splitText(selector) {
         const el = document.querySelector(selector);
         if (!el) return;
         const text = el.innerText;
-        el.innerHTML = text.split('').map(char => {
-            return char === ' ' ? ' ' : `<span class="char">${char}</span>`;
-        }).join('');
+        const words = text.split(' ');
+        el.innerHTML = words.map(word => {
+            const chars = word.split('').map(char => `<span class="char">${char}</span>`).join('');
+            return `<span style="display:inline-block; white-space:nowrap;">${chars}</span>`;
+        }).join(' ');
     }
 
     // 4. GSAP Animations
@@ -176,10 +178,15 @@ document.addEventListener("DOMContentLoaded", () => {
                 onUpdate: renderSeq
             });
 
+            let lastWidth = window.innerWidth;
             window.addEventListener('resize', () => {
-                seqCanvas.width = window.innerWidth * dpr;
-                seqCanvas.height = window.innerHeight * dpr;
-                renderSeq();
+                // Only resize if width changes (prevents mobile address bar scroll jitter)
+                if (window.innerWidth !== lastWidth) {
+                    lastWidth = window.innerWidth;
+                    seqCanvas.width = window.innerWidth * dpr;
+                    seqCanvas.height = window.innerHeight * dpr;
+                    renderSeq();
+                }
             });
         }
 

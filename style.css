@@ -137,6 +137,7 @@ ul {
     left: 0;
     width: 100vw;
     height: 100vh;
+    height: 100dvh;
     z-index: -2;
     pointer-events: none;
 }
@@ -147,6 +148,7 @@ ul {
     left: 0;
     width: 100vw;
     height: 100vh;
+    height: 100dvh;
     z-index: -1;
     pointer-events: none;
     opacity: 0.1; /* Reduced for minimalism */
@@ -224,6 +226,7 @@ ul {
    ========================================================================== */
 .hero {
     height: 100vh;
+    height: 100dvh;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -325,6 +328,7 @@ ul {
     left: 0;
     width: 100vw;
     height: 100vh;
+    height: 100dvh;
     z-index: -3; /* Placed behind the 3D particles (z-index: -2) */
     pointer-events: none;
     max-width: 100%;
