@@ -130,7 +130,7 @@ document.addEventListener("DOMContentLoaded", () => {
             seqCanvas.width = window.innerWidth * dpr;
             seqCanvas.height = window.innerHeight * dpr;
             
-            const frameCount = 150; // Total frames in new higher FPS sequence
+            const frameCount = 300; // Total frames in new higher FPS sequence
             const cacheBust = new Date().getTime(); // Prevent browser from loading old cached images
             const currentFrame = index => (
                 `assets/sequence/ezgif-frame-${(index + 1).toString().padStart(3, '0')}.jpg?v=${cacheBust}`
