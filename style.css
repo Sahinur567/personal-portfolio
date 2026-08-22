@@ -225,8 +225,11 @@ ul {
    Hero Section
    ========================================================================== */
 .hero {
-    height: 100vh;
-    height: 100dvh;
+    min-height: 100vh;
+    min-height: 100dvh;
+    padding-top: 120px;
+    padding-bottom: 60px;
+    height: auto;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -249,15 +252,11 @@ ul {
 }
 
 .title {
-    font-size: clamp(2rem, 5vw, 4rem); /* Smaller font size to fit on one line easily */
+    font-size: clamp(2rem, 5vw, 4rem); 
     font-weight: 300;
     line-height: 1.1;
     margin-bottom: 1.5rem;
     letter-spacing: -0.02em;
-    word-break: normal;
-    overflow-wrap: normal;
-    hyphens: none;
-    -webkit-hyphens: none;
 }
 
 .description {
@@ -587,7 +586,13 @@ footer {
     }
     
     .title {
-        font-size: clamp(2.5rem, 8vw, 3.5rem);
+        font-size: 2.2rem !important; /* Force smaller size on mobile */
+        line-height: 1.2;
+    }
+    
+    .description {
+        font-size: 1rem;
+        margin-bottom: 2rem;
     }
     
     .section-header h2 {
@@ -595,7 +600,15 @@ footer {
     }
     .data-bar {
         grid-template-columns: repeat(2, 1fr);
+        gap: 15px;
         margin-top: 30px;
+        padding-top: 20px;
+    }
+    .db-val {
+        font-size: 1.5rem;
+    }
+    .db-lbl {
+        font-size: 0.65rem;
     }
 }
 

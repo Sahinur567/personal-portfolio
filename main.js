@@ -87,33 +87,17 @@ document.addEventListener("DOMContentLoaded", () => {
             hamburger.classList.remove('active');
             navLinks.classList.remove('active');
         });
-    });
 
-    // Utility: Split text into spans for staggered animations (wrapped in words to prevent breaking)
-    function splitText(selector) {
-        const el = document.querySelector(selector);
-        if (!el) return;
-        const text = el.innerText;
-        const words = text.split(' ');
-        el.innerHTML = words.map(word => {
-            const chars = word.split('').map(char => `<span class="char">${char}</span>`).join('');
-            return `<span style="display:inline-block; white-space:nowrap;">${chars}</span>`;
-        }).join(' ');
-    }
 
     // 4. GSAP Animations
     gsap.registerPlugin(ScrollTrigger);
 
     function initGSAPAnimations() {
-        splitText('.title'); // Split the main hero title
-
         const heroTl = gsap.timeline();
         heroTl.from(".subtitle", { opacity: 0, y: 20, duration: 1.2, ease: "expo.out" })
-              .from(".title .char", { 
+              .from(".title", { 
                   opacity: 0, 
-                  y: 40, 
-                  rotateX: -90, 
-                  stagger: 0.02, 
+                  y: 30, 
                   duration: 1.5, 
                   ease: "expo.out" 
               }, "-=1.0")
@@ -165,18 +149,32 @@ document.addEventListener("DOMContentLoaded", () => {
 
             images[0].onload = renderSeq;
 
-            gsap.to(seq, {
-                frame: frameCount - 1,
-                snap: "frame",
-                ease: "none",
-                scrollTrigger: {
-                    trigger: "body", // Scrub through the whole page
-                    start: "top top",
-                    end: "bottom bottom",
-                    scrub: 0.5
-                },
-                onUpdate: renderSeq
-            });
+            if (window.innerWidth > 768) {
+                // Desktop: Scrub on scroll
+                gsap.to(seq, {
+                    frame: frameCount - 1,
+                    snap: "frame",
+                    ease: "none",
+                    scrollTrigger: {
+                        trigger: "body", 
+                        start: "top top",
+                        end: "bottom bottom",
+                        scrub: 0.5
+                    },
+                    onUpdate: renderSeq
+                });
+            } else {
+                // Mobile: Autoplay slowly to prevent massive scroll lag and jitter
+                gsap.to(seq, {
+                    frame: frameCount - 1,
+                    snap: "frame",
+                    ease: "none",
+                    duration: 10,
+                    repeat: -1,
+                    yoyo: true,
+                    onUpdate: renderSeq
+                });
+            }
 
             let lastWidth = window.innerWidth;
             window.addEventListener('resize', () => {
