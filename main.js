@@ -95,7 +95,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (!el) return;
         const text = el.innerText;
         el.innerHTML = text.split('').map(char => {
-            return char === ' ' ? '&nbsp;' : `<span class="char">${char}</span>`;
+            return char === ' ' ? ' ' : `<span class="char">${char}</span>`;
         }).join('');
     }
 
@@ -207,7 +207,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         // AI Video Scroll Animation
         gsap.from(".video-card", {
-            scrollTrigger: { trigger: ".ai-video", start: "top 80%" },
+            scrollTrigger: { trigger: ".video-grid", start: "top 80%" },
             opacity: 0, y: 50, stagger: 0.2, duration: 1, ease: "expo.out"
         });
 
