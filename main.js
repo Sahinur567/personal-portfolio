@@ -149,31 +149,29 @@ document.addEventListener("DOMContentLoaded", () => {
 
             images[0].onload = renderSeq;
 
-            if (window.innerWidth > 768) {
-                // Desktop: Scrub on scroll
-                gsap.to(seq, {
-                    frame: frameCount - 1,
-                    snap: "frame",
-                    ease: "none",
-                    scrollTrigger: {
-                        trigger: "body", 
-                        start: "top top",
-                        end: "bottom bottom",
-                        scrub: 0.5
-                    },
-                    onUpdate: renderSeq
-                });
-            } else {
-                // Mobile: Keep it as a static background image!
-                // Redrawing a massive canvas 30x a second during scroll destroys mobile performance.
-                // It will just draw the first frame (via images[0].onload) and stay beautiful & smooth.
-            }
+            // Desktop and Mobile: Scrub on scroll
+            gsap.to(seq, {
+                frame: frameCount - 1,
+                snap: "frame",
+                ease: "none",
+                scrollTrigger: {
+                    trigger: "body", 
+                    start: "top top",
+                    end: "bottom bottom",
+                    scrub: 0.5
+                },
+                onUpdate: renderSeq
+            });
 
+            let lastWidth = window.innerWidth;
             window.addEventListener('resize', () => {
-                // Resize unconditionally to prevent canvas stretching (zoom/fish eye effect) on mobile
-                seqCanvas.width = window.innerWidth * dpr;
-                seqCanvas.height = window.innerHeight * dpr;
-                renderSeq();
+                // Resize ONLY on width change to prevent canvas stretching/jitter on mobile vertical scroll
+                if (window.innerWidth !== lastWidth) {
+                    lastWidth = window.innerWidth;
+                    seqCanvas.width = window.innerWidth * dpr;
+                    seqCanvas.height = window.innerHeight * dpr;
+                    renderSeq();
+                }
             });
         }
 
