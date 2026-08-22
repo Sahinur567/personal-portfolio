@@ -258,13 +258,15 @@ ul {
 }
 
 .title {
-    font-size: clamp(3rem, 6vw, 5.5rem);
+    font-size: clamp(2.5rem, 6vw, 5.5rem);
     font-weight: 300;
     line-height: 1.1;
     margin-bottom: 1.5rem;
     letter-spacing: -0.02em;
-    word-break: keep-all;
+    word-break: normal;
     overflow-wrap: normal;
+    hyphens: none;
+    -webkit-hyphens: none;
 }
 
 .description {
