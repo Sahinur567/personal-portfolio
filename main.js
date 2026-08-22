@@ -169,15 +169,11 @@ document.addEventListener("DOMContentLoaded", () => {
                 // It will just draw the first frame (via images[0].onload) and stay beautiful & smooth.
             }
 
-            let lastWidth = window.innerWidth;
             window.addEventListener('resize', () => {
-                // Only resize if width changes (prevents mobile address bar scroll jitter)
-                if (window.innerWidth !== lastWidth) {
-                    lastWidth = window.innerWidth;
-                    seqCanvas.width = window.innerWidth * dpr;
-                    seqCanvas.height = window.innerHeight * dpr;
-                    renderSeq();
-                }
+                // Resize unconditionally to prevent canvas stretching (zoom/fish eye effect) on mobile
+                seqCanvas.width = window.innerWidth * dpr;
+                seqCanvas.height = window.innerHeight * dpr;
+                renderSeq();
             });
         }
 
