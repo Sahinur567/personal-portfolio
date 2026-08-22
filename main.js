@@ -111,8 +111,18 @@ document.addEventListener("DOMContentLoaded", () => {
         if (seqCanvas) {
             const context = seqCanvas.getContext("2d");
             const dpr = window.devicePixelRatio || 1;
-            seqCanvas.width = window.innerWidth * dpr;
-            seqCanvas.height = window.innerHeight * dpr;
+            
+            function resizeCanvas() {
+                // On mobile, lock canvas to the physical screen height. 
+                // This completely prevents the image from zooming in or stretching when the address bar hides!
+                const targetHeight = window.innerWidth <= 768 ? window.screen.height : window.innerHeight;
+                seqCanvas.width = window.innerWidth * dpr;
+                seqCanvas.height = targetHeight * dpr;
+                seqCanvas.style.height = targetHeight + 'px';
+                if (images && images.length > 0) renderSeq();
+            }
+            
+            // Note: resizeCanvas() will be called after images array is defined.
             
             const frameCount = 300; // Total frames in new higher FPS sequence
             const cacheBust = new Date().getTime(); // Prevent browser from loading old cached images
@@ -147,6 +157,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
             }
 
+            resizeCanvas(); // Setup initial perfectly locked dimensions
             images[0].onload = renderSeq;
 
             // Desktop and Mobile: Scrub on scroll
@@ -165,12 +176,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
             let lastWidth = window.innerWidth;
             window.addEventListener('resize', () => {
-                // Resize ONLY on width change to prevent canvas stretching/jitter on mobile vertical scroll
+                // Resize ONLY on width change (e.g. rotating phone) to prevent vertical scroll jitter
                 if (window.innerWidth !== lastWidth) {
                     lastWidth = window.innerWidth;
-                    seqCanvas.width = window.innerWidth * dpr;
-                    seqCanvas.height = window.innerHeight * dpr;
-                    renderSeq();
+                    resizeCanvas();
                 }
             });
         }
