@@ -61,10 +61,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Materials
     const particlesMaterial = new THREE.PointsMaterial({
-        size: 0.02,
+        size: 0.015,
         vertexColors: true,
         transparent: true,
-        opacity: 0.9,
+        opacity: 0.5,
         blending: THREE.AdditiveBlending
     });
 
